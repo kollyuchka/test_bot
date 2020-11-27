@@ -8,10 +8,6 @@ from flask import request
 import config
 
 bot = telebot.TeleBot(config.TOKEN)
-bot.remove_webhook()
-bot.set_webhook(config.URL)
-bot.set_webhook(config.URL + config.TOKEN)
-
 
 
 app = Flask(__name__)
@@ -29,7 +25,8 @@ def echo_message(message):
 
 @app.route('/' + config.TOKEN, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+    bot.process_new_updates([update])
     return "!", 200
 
 
